@@ -5,6 +5,9 @@ const uuidv4 = uuid.v4;
 const key = global.key;
 const cert = global.cert;
 
+global.tokenConsent_save;
+global.consentId_save;
+
 async function accountConsents(accessToken, key, cert) {
   const interactionId = uuidv4();
   let res = await request.post({
@@ -47,6 +50,7 @@ async function accountConsents(accessToken, key, cert) {
       Risk: {},
     }),
   });
+  console.log(res);
   return await JSON.parse(res);
 }
 
@@ -56,8 +60,35 @@ async function getAuthAccount() {
     let { access_token } = await getAuth(scope);
     let { Data } = await accountConsents(access_token, key, cert);
     let { ConsentId } = Data;
+    global.consentId_save = ConsentId;
+    global.tokenConsent_save = access_token;
     let link = await getLinkAuthAccount(ConsentId, key, cert);
     return link;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getStatusAuth() {
+  const interactionId = uuidv4();
+  console.log(global.consentId_save);
+  console.log(global.tokenConsent_save);
+  try {
+    let res = await request.get({
+      url:
+        "https://rs1.tecban-sandbox.o3bank.co.uk/open-banking/v3.1/aisp/account-access-consents/" +
+        global.consentId_save,
+      key: key,
+      cert: cert,
+      rejectUnauthorized: false,
+      headers: {
+        "Content-Type": "application/json",
+        "x-fapi-financial-id": "c3c937c4-ab71-427f-9b59-4099b7c680ab",
+        "x-fapi-interaction-id": interactionId,
+        Authorization: "Bearer " + global.tokenConsent_save,
+      },
+    });
+    return await JSON.parse(res);
   } catch (err) {
     throw err;
   }
@@ -72,7 +103,7 @@ async function confirmAuthAccount(code) {
   }
 }
 
-async function getAccounts(token) {
+async function getAccounts(token) {  
   const interactionId = uuidv4();
   try {
     let res = await request.get({
@@ -120,7 +151,7 @@ async function getAccount(token, accountId) {
 async function getBalancesAccounts(token) {
   const interactionId = uuidv4();
   let res = await request.get({
-    url:
+    uri:
       "https://rs1.tecban-sandbox.o3bank.co.uk/open-banking/v3.1/aisp/balances",
     key: key,
     cert: cert,
@@ -163,4 +194,5 @@ export {
   getAccount,
   getBalancesAccounts,
   getBalanceAccount,
+  getStatusAuth
 };

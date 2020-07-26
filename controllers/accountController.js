@@ -6,6 +6,7 @@ import {
   getAccount,
   getBalancesAccounts,
   getBalanceAccount,
+  getStatusAuth
 } from "../API - TecBan/account.js";
 
 async function getAuth(req, res) {
@@ -124,4 +125,20 @@ async function getBalance(req, res) {
   }
 }
 
-export { getAuth, getToken, getAllAccounts, getSpecificAccount, getBalances, getBalance };
+async function getStatusConfirmation(_,res){
+  try{
+    let status = await getStatusAuth();
+    res.status(200).send(status)
+  }catch(error){
+    logger.error(`POST /account/authstatus - ${JSON.stringify(error.message)}`);
+    res
+      .status(400)
+      .send({
+        message:
+          error.message || "Erro ao consultar o status a autenticação",
+      });
+  }
+}
+
+
+export { getAuth, getToken, getAllAccounts, getSpecificAccount, getBalances, getBalance , getStatusConfirmation };
