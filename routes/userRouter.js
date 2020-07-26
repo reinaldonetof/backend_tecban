@@ -3,11 +3,11 @@ import controller from '../controllers/userController.js';
 
 const app = express();
 
-app.post('/grade/', controller.create);
-app.get('/grade/', controller.findAll);
-app.get('/grade/:id', controller.findOne);
-app.put('/grade/:id', controller.update);
-app.delete('/grade/:id', controller.remove);
-app.delete('/grade/', controller.removeAll);
+app.post('/user/', controller.create);
+app.get('/user/', controller.findAll);
+app.get('/user/login', controller.login);
+app.get('/user/:id', controller.findOne);
+app.put('/user/:id', controller.update);
+app.delete('/user/:id', controller.remove);
 
-export { app as gradeRouter };
+export { app as userRouter };

@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import { gradeRouter } from './routes/userRouter.js';
+import { userRouter } from './routes/userRouter.js';
+import { accountRouter } from './routes/accountRouter.js';
 import { logger } from './config/logger.js';
 import { db } from './models/index.js';
 
@@ -29,7 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use(gradeRouter);
+app.use(userRouter);
+app.use(accountRouter);
 
 app.get('/', (req, res) => {
   res.send('API em execucao');
