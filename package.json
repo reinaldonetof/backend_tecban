@@ -22,7 +22,7 @@
     "loglevel": "1.6.3",
     "mongoose": "^5.9.20",
     "nodemon": "^2.0.4",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "uuid": "^3.4.0",
